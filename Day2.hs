@@ -1034,4 +1034,5 @@ down 5
 forward 7|]
 
 day2in' :: [(String, Int)]
-day2in' = map (\x -> let xs = words x in (head xs, read $ head $ tail xs)) (lines day2in) :: [(String, Int)]
+day2in' = map (\x -> let xs = words x in (head xs, read $ head $ tail xs)) 
+  (lines day2in)
