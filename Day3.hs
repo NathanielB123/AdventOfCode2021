@@ -40,7 +40,7 @@ day3p2' ns
         bool = m == map more1s (transpose ns) !! i
 
 more1s :: [Bool] -> Bool
-more1s bs = uncurry (>) (foldr (\b (c0, c1) ->
+more1s bs = uncurry (>) (foldl (\(c0, c1) b ->
   if b then (c0, c1 + 1)
   else (c0 + 1, c1))
   (0, 0) bs)
