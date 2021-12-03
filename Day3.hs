@@ -19,9 +19,25 @@ day3p2 ns
     filterNums [n] _ _
       = binToDec n
     filterNums ns i m
-      | m == map more1s (transpose ns) !! i = filterNums (filter (
-        \x -> not (x !! i)) ns) (i + 1) m
-      | otherwise = filterNums (filter (!! i) ns) (i + 1) m
+      = filterNums (filter (\x -> (x !! i) /=
+        (m == map more1s (transpose ns) !! i)) ns) (i + 1) m
+
+-- Alternate day 3 part 2 that runs much faster:
+-- I'm honestly not sure why GHC can't optimise the above version to become
+-- this as it's pretty clear (m == map more1s (transpose ns) !! i) does
+-- not depend on x, oh well...
+
+day3p2' :: [[Bool]] -> Int
+day3p2' ns
+  = filterNums ns 0 True * filterNums ns 0 False
+  where
+    filterNums :: [[Bool]] -> Int -> Bool -> Int
+    filterNums [n] _ _
+      = binToDec n
+    filterNums ns i m
+      = filterNums (filter (\x -> (x !! i) /= bool) ns) (i + 1) m
+      where
+        bool = m == map more1s (transpose ns) !! i
 
 more1s :: [Bool] -> Bool
 more1s bs = uncurry (>) (foldr (\b (c0, c1) ->
