@@ -4,19 +4,31 @@
 import Text.RawString.QQ
 import Data.List (transpose)
 
-day3p1 :: [[Int]] -> Int
+day3p1 :: [[Bool]] -> Int
 day3p1 ns
-  = binToDec x * (binToDec . flipBits) x
+  = binToDec x * (binToDec . map not) x
   where
     x :: [Bool]
-    x = map (uncurry (>) . foldr (\n (c0, c1) -> 
-      if n == 0 then (c0 + 1, c1) 
-      else (c0, c1 + 1)) 
+    x = map (uncurry (>) . foldr (\n (c0, c1) ->
+      if n then (c0, c1 + 1)
+      else (c0 + 1, c1))
       (0, 0)) $ transpose ns
 
-flipBits :: [Bool] -> [Bool]
-flipBits
-  = map not
+day3p2 :: [[Bool]] -> Int
+day3p2 ns
+  = filterNums ns 0 True * filterNums ns 0 False
+  where
+    filterNums :: [[Bool]] -> Int -> Bool -> Int
+    filterNums [n] _ _
+      = binToDec n
+    filterNums ns i m
+      | m == more1s ns i = filterNums (filter (\x -> not (x !! i)) ns) (i + 1) m
+      | otherwise = filterNums (filter (!! i) ns) (i + 1) m
+    more1s :: [[Bool]] -> Int -> Bool
+    more1s ns i = uncurry (>) (foldr ((\n (c0, c1) ->
+      if n then (c0, c1 + 1)
+      else (c0 + 1, c1)) . (!! i))
+      (0, 0) ns)
 
 binToDec :: [Bool] -> Int
 binToDec ds
@@ -1030,6 +1042,6 @@ day3in = [r|010101110000
 011101100110
 011011010010|]
 
-day3in' :: [[Int]]
-day3in' = map (map $ read . (: [])) $ lines day3in
+day3in' :: [[Bool]]
+day3in' = map (map (== '1')) $ lines day3in
 
