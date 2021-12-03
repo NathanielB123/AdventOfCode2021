@@ -7,7 +7,7 @@ day1p1 :: [Int] -> Int
 day1p1
   = fst . foldl (\(c, n') n -> (c + if n > n' then 1 else 0, n)) (0, maxBound)
 
--- Alternate way of doing day 1 part 2
+-- Alternate way of doing day 1 part 1
 day1p1' :: [Int] -> Int
 day1p1' xs
   = foldl (\c (n', n) -> c + if n > n' then 1 else 0) 0 $ zip xs $ tail xs
