@@ -9,10 +9,7 @@ day3p1 ns
   = binToDec x * (binToDec . map not) x
   where
     x :: [Bool]
-    x = map (uncurry (>) . foldr (\n (c0, c1) ->
-      if n then (c0, c1 + 1)
-      else (c0 + 1, c1))
-      (0, 0)) $ transpose ns
+    x = map more1s $ transpose ns
 
 day3p2 :: [[Bool]] -> Int
 day3p2 ns
@@ -22,13 +19,15 @@ day3p2 ns
     filterNums [n] _ _
       = binToDec n
     filterNums ns i m
-      | m == more1s ns i = filterNums (filter (\x -> not (x !! i)) ns) (i + 1) m
+      | m == map more1s (transpose ns) !! i = filterNums (filter (
+        \x -> not (x !! i)) ns) (i + 1) m
       | otherwise = filterNums (filter (!! i) ns) (i + 1) m
-    more1s :: [[Bool]] -> Int -> Bool
-    more1s ns i = uncurry (>) (foldr ((\n (c0, c1) ->
-      if n then (c0, c1 + 1)
-      else (c0 + 1, c1)) . (!! i))
-      (0, 0) ns)
+
+more1s :: [Bool] -> Bool
+more1s bs = uncurry (>) (foldr (\b (c0, c1) ->
+  if b then (c0, c1 + 1)
+  else (c0 + 1, c1))
+  (0, 0) bs)
 
 binToDec :: [Bool] -> Int
 binToDec ds
