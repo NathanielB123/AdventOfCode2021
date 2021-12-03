@@ -19,8 +19,8 @@ day3p2 ns
     filterNums [n] _ _
       = binToDec n
     filterNums ns i m
-      = filterNums (filter (\x -> (x !! i) /=
-        (m == map more1s (transpose ns) !! i)) ns) (i + 1) m
+      = filterNums (filter (\x -> (m == map more1s (transpose ns) !! i) /= 
+        (x !! i)) ns) (i + 1) m
 
 -- Alternate day 3 part 2 that runs much faster:
 -- I'm honestly not sure why GHC can't optimise the above version to become
@@ -35,7 +35,7 @@ day3p2' ns
     filterNums [n] _ _
       = binToDec n
     filterNums ns i m
-      = filterNums (filter (\x -> (x !! i) /= bool) ns) (i + 1) m
+      = filterNums (filter (\x -> bool /= (x !! i)) ns) (i + 1) m
       where
         bool = m == map more1s (transpose ns) !! i
 
