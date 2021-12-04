@@ -9,14 +9,12 @@ day4p1 :: Input -> Int
 day4p1 (n: ns', bs)
   = case winner of
     Nothing -> day4p1 (ns', bs')
-    Just b -> n * sum (map sum (mapB (\(x, b) -> if b then 0 else x) b))
+    Just b -> n * score b
   where
-    bs' :: [Board]
     bs' = mapBs (\p@(x, _) -> if x == n then (x, True) else p) bs
-    bs'' = mapBs snd bs'
-    winner = (bs' !!) <$> findIndex id (map checkForWin bs'')
-day4p1 ([], bs)
-  = error (show bs)
+    winner = (bs' !!) <$> findIndex id (map checkForWin $ mapBs snd bs')
+day4p1 ([], _)
+  = error "No winner!"
 
 day4p2 :: Input -> Int
 day4p2 i@(_, bs)
@@ -26,17 +24,15 @@ day4p2 i@(_, bs)
     day4p2' (n: ns', bs) prevWin
       = case winner of
         Nothing -> day4p2' (ns', bs') newWin
-        Just b -> n * sum (map sum (mapB (\(x, b) -> if b then 0 else x) b))
+        Just b -> n * score b
       where
-        bs' :: [Board]
         bs' = mapBs (\p@(x, _) -> if x == n then (x, True) else p) bs
-        bs'' = mapBs snd bs'
-        newWin = map checkForWin bs''
+        newWin = map checkForWin $ mapBs snd bs'
         winner
           | and newWin = (bs' !!) <$> findIndex not prevWin
           | otherwise = Nothing
-    day4p2' ([], bs) _
-      = error (show bs)
+    day4p2' ([], _) _
+      = error "No winner!"
 
 mapB :: ((Int, Bool) -> a) -> Board -> [[a]]
 mapB f
@@ -45,6 +41,10 @@ mapB f
 mapBs :: ((Int, Bool) -> a) -> [Board] -> [[[a]]]
 mapBs f
   = map (mapB f)
+
+score :: Board -> Int 
+score b
+  = sum (map sum (mapB (\(x, b) -> if b then 0 else x) b))
 
 checkForWin :: [[Bool]] -> Bool
 checkForWin b
