@@ -6,21 +6,17 @@ import Prelude
 import Data.List(transpose, findIndex)
 
 day4p1 :: Input -> Int
-day4p1
-  = day4p1'
+day4p1 (n: ns', bs)
+  = case winner of
+    Nothing -> day4p1 (ns', bs')
+    Just b -> n * sum (map sum (mapB (\(x, b) -> if b then 0 else x) b))
   where
-    day4p1' :: Input -> Int
-    day4p1' (n: ns', bs)
-      = case winner of
-        Nothing -> day4p1' (ns', bs')
-        Just b -> n * sum (map sum (mapB (\(x, b) -> if b then 0 else x) b))
-      where
-        bs' :: [Board]
-        bs' = mapBs (\p@(x, _) -> if x == n then (x, True) else p) bs
-        bs'' = mapBs snd bs'
-        winner = findIndex id (map checkForWin bs'') >>= (\x -> Just $ bs' !! x)
-    day4p1' ([], bs)
-      = error (show bs)
+    bs' :: [Board]
+    bs' = mapBs (\p@(x, _) -> if x == n then (x, True) else p) bs
+    bs'' = mapBs snd bs'
+    winner = (bs' !!) <$> findIndex id (map checkForWin bs'')
+day4p1 ([], bs)
+  = error (show bs)
 
 day4p2 :: Input -> Int
 day4p2 i@(_, bs)
@@ -37,7 +33,7 @@ day4p2 i@(_, bs)
         bs'' = mapBs snd bs'
         newWin = map checkForWin bs''
         winner
-          | and newWin = findIndex not prevWin >>= (\x -> Just $ bs' !! x)
+          | and newWin = (bs' !!) <$> findIndex not prevWin
           | otherwise = Nothing
     day4p2' ([], bs) _
       = error (show bs)
@@ -688,7 +684,7 @@ day4In' :: Input
 day4In'
   = (map read $ split l ',', foldl perLine [] ls)
   where
-    (l : _ : ls) = lines day4In
+    (l : _ : ls) = lines day4InFull
     perLine :: [Board] -> String -> [Board]
     perLine ls' l'
       = case ls' of
