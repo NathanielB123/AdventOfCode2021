@@ -19,7 +19,7 @@ day5p1 ls
         Just p'' -> (if c > 1 then 1 else 0) + day5p1' ls p''
         Nothing -> 0
       where
-        c = foldl (\acc l -> acc + if intersects p l then 1 else 0) 0 ls
+        c = foldl (\acc l -> acc + fromEnum (intersects p l)) 0 ls
         p'
           | x > 99 = Just (0, y+1)
           | y > 99 = Nothing
@@ -34,8 +34,8 @@ day5p2 ls
         Just p'' -> (if c > 1 then 1 else 0) + day5p1' ls p''
         Nothing -> 0
       where
-        c = foldl (\acc l -> acc + if intersects p l || intersectsDiag p l then 
-          1 else 0) 0 ls
+        c = foldl (\acc l -> acc + fromEnum (intersects p l || intersectsDiag p 
+          l)) 0 ls
         p'
           | x > 999 = Just (0, y+1)
           | y > 999 = Nothing
