@@ -18,17 +18,21 @@ day6Optimised ts n
   = sum $ iterate step (foldl toIndex (replicate 9 0) ts) !! n
   where
     step (t : ts)
-      = replace ts' 6 (ts' !! 6 + t)
+      = addToIndex ts' 6 t
       where
         ts' = ts ++ [t]
     step _
       = error "The list collapsed somehow"
     toIndex i t
-      = replace i t (i !! t + 1)
+      = addToIndex i t 1
 
 replace :: [Int] -> Int -> Int -> [Int]
 replace l i x
   = take i l ++ x : drop (i+1) l
+
+addToIndex :: [Int] -> Int -> Int -> [Int]
+addToIndex l i x
+  = replace l i (l !! i + x)
 
 day6In :: String
 day6In = [r|3,4,3,1,2|]
