@@ -1,6 +1,3 @@
-from bidict import bidict
-from collections import defaultdict
-
 # Warning: code below is an absolute abomination. I had a real bad time with this day.
 
 inp = map(lambda each: list(map(lambda each: each.strip(" ").split(" "), each)), list(map(lambda each: each.split("|"),
@@ -207,16 +204,16 @@ agdefc cfad bdgecfa gadfe aefgc ad ceadgb gbafce bfedg agd | dag ad fcage cgbafe
 
 SEGS = "abcdefg"
 
-numSegIndex = bidict({0 : frozenset("abcefg"),
-                      1 : frozenset("cf"),
-                      2 : frozenset("acdeg"),
-                      3 : frozenset("acdfg"),
-                      4 : frozenset("bcdf"),
-                      5 : frozenset("abdfg"),
-                      6 : frozenset("abdefg"),
-                      7 : frozenset("acf"),
-                      8 : frozenset("abcdefg"),
-                      9 : frozenset("abcdfg")})
+numSegIndex = {0 : set("abcefg"),
+               1 : set("cf"),
+               2 : set("acdeg"),
+               3 : set("acdfg"),
+               4 : set("bcdf"),
+               5 : set("abdfg"),
+               6 : set("abdefg"),
+               7 : set("acf"),
+               8 : set("abcdefg"),
+               9 : set("abcdfg")}
 
 lenNumIndex = [[] for _ in range(0,10)]
 
@@ -246,9 +243,6 @@ def perLine(line):
                                                      all(map(lambda i: seg in sum(map(lambda each: list(numSegIndex[each]),totalPossibilities[i]),[]),
                                                              filter(lambda i: wire in totalDigits[i], range(14)))),
                                                          wireSegPossibilities[wire])))
-        # Remove impossible duplicates
-        #for i in range(10):
-        #    uniquePossibilities[i] = list(filter(lambda each: helperFunc(list(map(lambda wire: wireSegPossibilities[wire], uniqueDigits[i])), set(numSegIndex[each])), uniquePossibilities[i]))
         uniquePossibilities = remToUnique(uniquePossibilities)
         outputPossibilities = remToUnique(outputPossibilities)
         wires, segs = list(wireSegPossibilities.keys()), list(wireSegPossibilities.values())
@@ -279,24 +273,18 @@ def remToUnique(x):
     return x
 
 def helperFunc(possible, toGo):
-    #print((possible, toGo))
     possible = possible.copy()
     toGo = toGo.copy()
     if len(toGo) != len(possible):
-        #print("NO!")
         return False
     if len(toGo) == 0:
-        #print("YAY!")
         return True
     prevToGo = toGo.copy()
     current = toGo.pop()
-    #print(current)
     for i in range(len(possible)):
         newPossible = possible.copy()
         possibilities = newPossible.pop(i)
-        #print(possibilities)
         if current in possibilities:
-            #print((possible, prevToGo, current, possibilities))
             if helperFunc(newPossible, toGo):
                 return True
     return False
