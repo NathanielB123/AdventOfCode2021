@@ -11,40 +11,28 @@ day12p1 ls
     day12p1' :: [(String, String)] -> String -> String -> [String] -> Int
     day12p1' ls o d vs
       | o == d = 1
-      | otherwise = sum $ map (\x -> day12p1' ls x d $ if isUpper x then vs else x : vs) adj
+      | otherwise = sum $ map (\x -> day12p1' ls x d $ if isUpper x then vs else
+          x : vs) adj
       where
         adj = map snd $ filter (\(x, y) -> x == o && notElem y vs) ls
 
-{-
 day12p2 :: [(String, String)] -> Int
 day12p2 ls
   = day12p2' ls "start" "end" ["start"] False
   where
-    day12p2' :: [(String, String)] -> String -> String -> [String] -> Bool -> Int
+    day12p2' :: [(String, String)] -> String -> String -> [String] -> Bool 
+      -> Int
     day12p2' ls o d vs smallVisit
       | o == d = 1
-      | otherwise = sum $ map (\x -> day12p2' ls x d (if isUpper x || not smallVisit then vs else x : vs) 
-        (smallVisit || (not . isUpper) x)) adj
+      | otherwise = sum $ map (\x -> day12p2' ls x d (if isUpper x then vs else 
+          x : vs) $ smallVisit || (x `elem` vs && not (isUpper x))) adj
       where
-        adj = map snd $ filter (\(x, y) -> x == o && y `notElem` vs) ls
--}
-
-day12p2 :: [(String, String)] -> Int
-day12p2 ls
-  = day12p2' ls "start" "end" ["start"] False
-  where
-    day12p2' :: [(String, String)] -> String -> String -> [String] -> Bool -> Int
-    day12p2' ls o d vs smallVisit
-      | o == d = 1
-      | otherwise = sum $ map (\x -> day12p2' ls x d (if isUpper x then vs else x : vs) 
-        (smallVisit || (x `elem` vs && not (isUpper x)))) adj
-      where
-        adj = map snd $ filter (\(x, y) -> x == o && (y `notElem` vs || not smallVisit) && y /= "start") ls
+        adj = map snd $ filter (\(x, y) -> x == o && (y `notElem` vs || not 
+          smallVisit) && y /= "start") ls
 
 isUpper :: String -> Bool
 isUpper x
   = map toUpper x == x
-
 
 day12In :: String
 day12In = [r|kc-qy
