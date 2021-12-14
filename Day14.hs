@@ -4,8 +4,8 @@
 import Text.RawString.QQ ( r )
 import Data.List (sort)
 
-day14 :: (String, [(String, Char)]) -> Int
-day14 (c, rs)
+day14p1 :: (String, [(String, Char)]) -> Int
+day14p1 (c, rs)
   = map getVal (iterate (`day14'` rs) c) !! 10
   where
     day14' :: String -> [(String, Char)] -> String
