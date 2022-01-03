@@ -5,16 +5,11 @@ import Text.RawString.QQ
 
 day1p1 :: [Int] -> Int
 day1p1
-  = fst . foldl (\(c, n') n -> (c + if n > n' then 1 else 0, n)) (0, maxBound)
-
--- Alternate way of doing day 1 part 1
-day1p1' :: [Int] -> Int
-day1p1' xs
-  = foldl (\c (n', n) -> c + if n > n' then 1 else 0) 0 $ zip xs $ tail xs
+  = sum . (zipWith (\n' n -> if n > n' then 1 else 0) <*> tail)
 
 day1p2 :: [Int] -> Int
-day1p2 xs
-  = foldl (\c (n', n) -> c + if n > n' then 1 else 0) 0 $ zip xs $ drop 3 xs
+day1p2
+  = sum . (zipWith (\n' n -> if n > n' then 1 else 0) <*> drop 3)
 
 day1in :: String
 day1in = [r|174
