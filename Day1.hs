@@ -6,10 +6,12 @@ import Text.RawString.QQ
 day1p1 :: [Int] -> Int
 day1p1
   = sum . (zipWith (\x y -> fromEnum $ x > y) <*> tail)
+  -- = sum . (zipWith ((fromEnum .) . (>)) <*> tail)
 
 day1p2 :: [Int] -> Int
 day1p2
   = sum . (zipWith (\x y -> fromEnum $ x > y) <*> drop 3)
+  -- = sum . (zipWith ((fromEnum .) . (>)) <*> drop 3)
 
 day1in :: String
 day1in = [r|174
